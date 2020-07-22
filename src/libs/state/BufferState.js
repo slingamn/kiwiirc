@@ -305,7 +305,11 @@ export default class BufferState {
         // before it. Going forward takes the last message we have and requests messages after
         // it.
 
-        if (direction === 'backward') {
+        if (direction === 'backward' && this.getMessages().length === 0) {
+            // An empty buffer, so just get the latest chathistory
+            chathistoryFuncName = 'latest';
+            time = '*';
+        } else if (direction === 'backward') {
             let lastMessage = this.getMessages().reduce((earliest, current) => {
                 let ignoreTypes = ['traffic', 'topic', 'connection', 'presence'];
                 let validType = ignoreTypes.indexOf(earliest.type) === -1;
